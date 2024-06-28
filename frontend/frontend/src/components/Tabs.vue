@@ -47,10 +47,11 @@
                 },
               ]"
             >
+
               <ul
                 class="mb-2 flex space-x-1 text-md font-normal leading-4 text-black"
               >
-                <li class="rounded-full bg-white px-3 py-1 flex items-center justify-center">{{ item.timeOfDay }}</li>
+                <li class="rounded-full bg-white px-3 py-1 flex items-center justify-center">{{ item.task_times[0].time}}</li>
                 <li>&middot;</li>
                 <li class="rounded-full bg-white px-3 py-1 flex items-center justify-center">{{ item.category_name }}</li>
                 <li v-if="item.duration != null">&middot;</li>
@@ -65,7 +66,7 @@
                <PencilSquareIcon  class="h-8 w-8 text-green-300"/>
               </router-link>
               <button v-if="idx == 0"
-                @click="completeTask(day, item.id)"
+                @click="completeTask(day, item.id, item.task_times[0].time)"
                 class="absolute top-2 right-2  text-white rounded-full px-2 py-1 text-xs"
               >
                <CheckCircleIcon  class="h-8 w-8 text-green-300"/>
@@ -130,8 +131,8 @@ const fetchAllTasks = async () => {
 }
 
 // Function to mark a task as completed
-const completeTask = (day, taskId) => {
-  markAsCompleted(day, taskId, categories);
+const completeTask = (day, taskId, taskTime) => {
+  markAsCompleted(day, taskId, taskTime, categories);
 }
 
 // Fetch tasks when the component is mounted

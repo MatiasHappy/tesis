@@ -21,6 +21,8 @@ class TaskController extends Controller
         unset($task->taskCategory); // Optionally remove the relationship to avoid redundant data
     });
     }
+
+    
     public function getTasksForDay($day)
     {
         $dayMap = [
@@ -32,44 +34,64 @@ class TaskController extends Controller
             'friday' => Carbon::FRIDAY,
             'saturday' => Carbon::SATURDAY,
         ];
-
+    
         $today = Carbon::today();
         $targetDate = $today;
-
+    
         // Check if today matches the given day
         if ($today->dayOfWeek !== $dayMap[$day]) {
             // Get the next occurrence of the given day
             $targetDate = $today->next($dayMap[$day]);
         }
-
+    
         $targetDate = $targetDate->startOfDay();
-       // Log::info('targetDate Date: ' . $targetDate . " day:" . $day);
-
+    
+        // Fetch tasks with their categories and times
         $tasks = Task::with(['taskCategory', 'taskTimes'])->get()->filter(function ($task) use ($targetDate) {
             $startDate = Carbon::parse($task->start_date)->startOfDay();
-            //Log::info('Start Date: ' . $startDate);
-
+    
             // Check if repeat_interval is not null and greater than 0
             if ($task->repeat_interval !== null && $task->repeat_interval > 0) {
                 return $startDate->diffInDays($targetDate) % $task->repeat_interval === 0;
             }
-
+    
             // If repeat_interval is null or 0, treat it as a one-time task
             // Include the task if today matches the start_date
             return $startDate->isSameDay($targetDate);
         });
+    
+        // Transform tasks to include duplicates for multiple times
+        $transformedTasks = [];
+    
+        foreach ($tasks as $task) {
+            $categoryName = $task->taskCategory->name;
+            foreach ($task->taskTimes as $time) {
+                $duplicatedTask = clone $task;
+                $duplicatedTask->category_name = $categoryName; // Set category name
+                $duplicatedTask->time_of_day = $time->time; 
+                
 
-        $tasks->each(function ($task) {
-            $task->category_name = $task->taskCategory->name;
-            $task->task_times = $task->taskTimes;
-            //$task->task_attempts = $task->taskAttempts;
-            unset($task->taskCategory); // Optionally remove the relationship to avoid redundant data
-            unset($task->taskTimes); // Optionally remove the relationship to avoid redundant data
-            unset($task->taskAttempts); // Optionally remove the relationship to avoid redundant data
-        });
+                $duplicatedTask->task_times = collect([$time])->map(function ($time) {
+                    return [
+                        'id' => $time->id,
+                        'task_id' => $time->task_id,
+                        'time' => $time->time,
+                        // Add more fields as needed, excluding 'created_at' and 'updated_at'
+                    ];
+                });
 
-        return response()->json($tasks->values()->all());
+               
+                unset($duplicatedTask->taskCategory); // remove the relationship 
+                unset($duplicatedTask->taskTimes);
+                $transformedTasks[] = $duplicatedTask;
+            }
+        }
+        $sortedTasks = $this->sortTasksByTimeOfDay($transformedTasks);
+
+    return response()->json($sortedTasks);
+    
     }
+    
  
     
     public function store(Request $request)
@@ -206,4 +228,32 @@ class TaskController extends Controller
             return response()->json(['error' => 'An error occurred', 'message' => $e->getMessage()], 500);
         }
     }
+
+
+
+
+// Function to sort tasks by time of day
+private function sortTasksByTimeOfDay($tasks)
+{
+    usort($tasks, function ($task1, $task2) {
+        $timeOrder = [
+            'morning' => 1,
+            'afternoon' => 2,
+            'evening' => 3,
+            'night' => 4,
+        ];
+
+        $time1 = array_search(strtolower($task1->time_of_day), array_keys($timeOrder));
+        $time2 = array_search(strtolower($task2->time_of_day), array_keys($timeOrder));
+
+        return $time1 <=> $time2;
+    });
+
+    return $tasks;
+}
+
+
+
+
+
 }

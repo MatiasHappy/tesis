@@ -14,7 +14,8 @@
 </template>
 
 <script>
-import authService from './services/authService'; // Import your authentication service
+import authService from './services/authService'; 
+
 
 import FooterMobile from './components/partials/FooterApp.vue'
 import Logo from './components/partials/Logo.vue';
@@ -37,7 +38,7 @@ export default {
     }
   },
   async created() {
-    // Fetch user data when component is created (on application start)
+    // Fetch user data when component is created 
     try {
       const response = await authService.getUser(); // Example: Fetch user data from authService
       this.user = response.data; // Set user object

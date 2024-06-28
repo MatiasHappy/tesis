@@ -13,14 +13,13 @@ export const fetchTasksForDay = async (day, categories) => {
     return;
   }
 
-  //console.log(`Fetching tasks for ${day} from API`);
+  console.log(`Fetching tasks for ${day} from API`);
   try {
     const response = await axios.get(`http://localhost:8000/api/tasks/${day.toLowerCase()}`);
-   //console.log("API response for", day, response.data);
+   console.log("API response for", day, response.data);
     if (Array.isArray(response.data)) {
       const tasks = response.data.map(task => ({
         ...task,
-        timeOfDay: 'morning',
         duration: task.duration || null,
       }));
       categories.value[day] = tasks;
@@ -34,26 +33,33 @@ export const fetchTasksForDay = async (day, categories) => {
   }
 };
 
-export const markAsCompleted = (day, taskId, categories) => {
-  console.log(`Marking task ${taskId} as completed for ${day}`);
+export const markAsCompleted = (day, taskId, taskTime, categories) => {
+  console.log(`Marking task ${taskId} (${taskTime}) as completed for ${day}`);
+  //console.log(localStorage.getItem(`tasks_${day}`), "getitem")
+  console.log("00", taskTime)
+  console.log(1, categories.value[day])
   if (categories.value[day]) {
-    categories.value[day] = categories.value[day].filter(task => task.id !== taskId);
+    categories.value[day] = categories.value[day].filter(task => !(task.id === taskId && task.time_of_day === taskTime));
+    console.log("day::",  categories.value[day])
+    
     localStorage.setItem(`tasks_${day}`, JSON.stringify(categories.value[day]));
-    console.log( JSON.stringify(categories.value[day]))
-    checkAttempt(taskId )
+    //console.log(JSON.stringify(categories.value[day]));
+    
+    checkAttempt(taskId); // Record attempt for the specific task time
+    
     console.log(`Updated tasks for ${day} saved to localStorage`);
   } else {
     console.error(`Tasks for ${day} are not defined`);
   }
 };
 
-
 export const checkAttempt = async (taskId) => {
   const attemptData = {
     attempt_date: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
-    status: 'completed' // Assuming the status is 'completed'
+    status: 'completed', 
+  
   };
-console.log("came here:: ")
+
   try {
     const response = await axios.post(`http://localhost:8000/api/tasks/${taskId}/record-attempt`, attemptData);
     console.log('Task attempt recorded:', response.data);
@@ -61,6 +67,13 @@ console.log("came here:: ")
     console.error('Error recording task attempt:', error);
   }
 };
+
+
+
+
+
+
+
 export const fetchCategories = async (categories) => {
   try {
     const response = await axios.get('http://localhost:8000/api/task-categories');
