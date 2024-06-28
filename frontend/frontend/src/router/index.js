@@ -2,13 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import Dashboard from '../views/Dashboard.vue'
+import store from '../store/index.js';
 import Tasks from '../views/tasks/Tasks.vue'
 import TaskView from '../views/tasks/TaskView.vue'
 
 
 const routes = [
-  { path: '/login', component: Login },
-  { path: '/register', component: Register },
+  { path: '/login', component: Login, meta: { guestOnly: true } }, 
+  { path: '/register', component: Register, meta: { guestOnly: true } }, 
   { path: '/dashboard', component: Dashboard, meta: { requiresAuth: true } },
 
   {
@@ -32,15 +33,15 @@ const router = createRouter({
 
 
 router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (!store.getters.isAuthenticated) {
-            next('/login');
-        } else {
-            next();
-        }
-    } else {
-        next();
-    }
+  if (to.meta.requiresAuth && !store.getters.isAuthenticated) {
+    // Redirect to login if route requires authentication and user is not authenticated
+    next('/login');
+  } else if (to.meta.guestOnly && store.getters.isAuthenticated) {
+    // Redirect to dashboard if route is for guests only and user is authenticated
+    next('/dashboard');
+  } else {
+    // Proceed to the next middleware or route
+    next();
+  }
 });
-
 export default router;

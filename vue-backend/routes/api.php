@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\TaskController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\API\AttemptController;
 use App\Http\Controllers\API\TaskCategoryController;
 /*

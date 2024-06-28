@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { createStore } from 'vuex';
 import authService from '../services/authService';
+import apiClient from '../services/axios';
 
-Vue.use(Vuex);
 
-export default new Vuex.Store({
+const store = createStore({
     state: {
         token: localStorage.getItem('token') || '',
         user: {}
@@ -23,9 +22,10 @@ export default new Vuex.Store({
         },
         async login({ commit }, credentials) {
             const response = await authService.login(credentials);
-            commit('SET_TOKEN', response.data.token);
-            localStorage.setItem('token', response.data.token);
-            apiClient.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+            console.log("store js log: ", response )
+            commit('SET_TOKEN', response.token);
+            localStorage.setItem('token', response.token);
+            apiClient.defaults.headers.common['Authorization'] = `Bearer ${response.token}`;
         },
         async logout({ commit }) {
             await authService.logout();
@@ -43,3 +43,5 @@ export default new Vuex.Store({
         user: state => state.user
     }
 });
+
+export default store;

@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
+import store from './store'; // Import the Vuex store
 import './style.css';
 import MainH1 from './components/partials/MainH1.vue';
 import RedIso from './components/partials/RedIso.vue';
@@ -11,4 +12,8 @@ const app = createApp(App);
 app.component('MainH1', MainH1);
 app.component('RedIso', RedIso);
 // Use the router and mount the app to the DOM
-app.use(router).mount('#app');
+
+app.use(router);
+app.use(store);
+
+app.mount('#app');

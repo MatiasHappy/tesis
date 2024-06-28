@@ -5,13 +5,13 @@ import { ref } from 'vue';
 const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export const fetchTasksForDay = async (day, categories) => {
- // console.log(`Checking localStorage for tasks_${day}`);
-  //const localData = localStorage.getItem(`tasks_${day}`);
- // if (localData) {
- //   console.log(`Loaded tasks for ${day} from localStorage`);
-  //  categories.value[day] = JSON.parse(localData);
- //   return;
- // }
+  console.log(`Checking localStorage for tasks_${day}`);
+  const localData = localStorage.getItem(`tasks_${day}`);
+  if (localData) {
+    console.log(`Loaded tasks for ${day} from localStorage`);
+    categories.value[day] = JSON.parse(localData);
+    return;
+  }
 
   //console.log(`Fetching tasks for ${day} from API`);
   try {
@@ -38,7 +38,8 @@ export const markAsCompleted = (day, taskId, categories) => {
   console.log(`Marking task ${taskId} as completed for ${day}`);
   if (categories.value[day]) {
     categories.value[day] = categories.value[day].filter(task => task.id !== taskId);
-    //localStorage.setItem(`tasks_${day}`, JSON.stringify(categories.value[day]));
+    localStorage.setItem(`tasks_${day}`, JSON.stringify(categories.value[day]));
+    console.log( JSON.stringify(categories.value[day]))
     checkAttempt(taskId )
     console.log(`Updated tasks for ${day} saved to localStorage`);
   } else {
