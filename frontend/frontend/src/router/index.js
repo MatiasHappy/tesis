@@ -1,15 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import Login from '../views/Login.vue';
+import Register from '../views/Register.vue';
 import Dashboard from '../views/Dashboard.vue'
 import Tasks from '../views/tasks/Tasks.vue'
 import TaskView from '../views/tasks/TaskView.vue'
 
 
 const routes = [
-  {
-    path: '/',
-    name: 'Dashboard',
-    component: Dashboard
-  },
+  { path: '/login', component: Login },
+  { path: '/register', component: Register },
+  { path: '/dashboard', component: Dashboard, meta: { requiresAuth: true } },
+
   {
     path: '/tasks',
     name: 'Tasks',
@@ -29,4 +30,17 @@ const router = createRouter({
   routes
 })
 
-export default router
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (!store.getters.isAuthenticated) {
+            next('/login');
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
+});
+
+export default router;
