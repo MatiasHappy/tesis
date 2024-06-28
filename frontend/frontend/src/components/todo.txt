@@ -1,0 +1,39 @@
+TO DO :: 
+
+TESIS --> 
+	
+Características
+Se limpia con agua y jabón
+No propaga la llama.
+Posee larga vida útil
+No requiere mantenimiento adicional.
+Resistente a la humedad y inmune a plagas y moho.
+Producto 100% ecológico, producido a partir de residuos industriales.
+
+
+Nuestros productos se fabrican con materiales sostenibles y respetuosos con el medio ambiente, fabricado a partir de residuos plásticos reciclados. Recubierto con polietileno y pigmentos, tenemos la certificación del Instituto Socioambiental Internacional Chico Mendes, el Sello Verde ICMBio y el Sello ESG 2024. Estos materiales contribuyen a la conservación de los recursos naturales recursos y ayudan a reducir nuestro impacto ambiental.
+
+VAOVAO --> 
+	TODO: 
+		
+		agregar variantes en productos // proyectos realizados en producto		
+		
+		
+		
+	
+		
+DONE :: 
+ En la parte donde estan los deck que aparezcan los 5 colores en el inicio tanto del deck como el revestimiento
+	deck veteado 90x32mm SACAR
+    Agregar pergola 2 metros con perfil de 90 
+    TABLA IPE POR CAOBA 
+    columnas::: intercambiar int metal 	
+    en la parte de distribuidores no se ve los números
+    Deck modular la medida del 43x43 cambiar y dejar de 50x50.
+    deck modular 05x0.5
+    mobiliario sacar soportes de basura y dejar en accesorio
+    tablas sacar de deck en el menu
+    sacar el perfil refilado de la parte de columnas.
+    soporte de cesto a accesorios
+    cambiar descripciones 
+    falta un distribuiidor de ferrocons
