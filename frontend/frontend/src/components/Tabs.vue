@@ -121,11 +121,13 @@
   import Completed from './modals/Completed.vue';
   
 import { state } from '../services/state';
+
+
 import { useStore } from 'vuex';
 import { ref, onMounted, computed } from 'vue'
   import { CheckCircleIcon, PencilSquareIcon } from '@heroicons/vue/20/solid'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
-import { fetchTasksForDay, markAsCompleted  } from '../services/taskService';
+import { fetchTasksForDay, markAsCompleted, markAsFailed  } from '../services/taskService';
 
 
 const store = useStore();
@@ -190,7 +192,14 @@ const completeTask = (day, taskId, taskTime) => {
 
 // Fetch tasks when the component is mounted
 onMounted(() => {
-  fetchAllTasks()
+  fetchAllTasks();
+
+
+ /* setInterval(async (day, taskId, taskTime) => {
+    console.log('in interval')
+    await markAsFailed(day, taskId, taskTime, categories);
+  }, 60000);*/
+
 })
 </script>
 

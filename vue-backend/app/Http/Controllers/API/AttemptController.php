@@ -17,7 +17,7 @@ class AttemptController extends Controller
         try {
             $validatedData = $request->validate([
                 'attempt_date' => 'required|date',
-                'status' => 'required|in:completed, failed',
+                'status' => 'required|in:completed,failed',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('Validation failed: ' . json_encode($e->errors()));
@@ -74,4 +74,17 @@ class AttemptController extends Controller
 
         return response()->json($attempt, 201);
     }
+
+
+
+
+    public function markAttemptAsFailed() 
+    {
+
+
+    }
+
+
+
+
 }

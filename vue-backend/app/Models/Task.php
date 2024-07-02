@@ -16,7 +16,9 @@ class Task extends Model
         'end_date',
         'duration',
         'time_of_day',
-        'task_category_id'
+        'task_category_id',
+        'task_ended'
+
     ];
 
     
