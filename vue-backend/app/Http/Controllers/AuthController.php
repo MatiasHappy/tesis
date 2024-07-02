@@ -41,7 +41,14 @@ class AuthController extends Controller
         $user = $request->user();
         $token = $user->createToken('SPA')->plainTextToken;
 
-        return response()->json(['token' => $token], 200);
+        return response()->json([
+            'token' => $token,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ]
+        ], 200);
     }
 
     public function logout(Request $request)

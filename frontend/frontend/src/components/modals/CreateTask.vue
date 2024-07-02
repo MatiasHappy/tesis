@@ -88,7 +88,7 @@
 
                   <div class="form-group mb-4">
                     <label for="end_date" class="block text-sm font-medium text-gray-700">End Date</label>
-                    <input type="date" id="end_date" v-model="task.end_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                    <input type="date" id="end_date" v-model="task.end_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" >
                     <span v-if="errors.end_date" class="text-red-500 text-sm">{{ errors.start_date[0] }}</span>
                   </div>
 
@@ -159,7 +159,7 @@ console.log("categories", categories);
 const handleCreateTask = async () => {
   console.log(task, "SUPER IMPORTANT TASK")
   await createTask(task, errors,emit, categories);
-  router.go(0)
+ // router.go(0)
 };
 
 const closeModal = () => {

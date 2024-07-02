@@ -16,6 +16,9 @@ class DatabaseSeeder extends Seeder
             
            //TaskCategorySeeder::class,
             TaskSeeder::class,
+            AttemptSeeder::class,
+            UserSeeder::class
+
         ]);
         // \App\Models\User::factory(10)->create();
         

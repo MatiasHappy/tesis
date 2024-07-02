@@ -1,11 +1,26 @@
 // taskService.js
 import axios from 'axios';
+
+import { useStore } from 'vuex';
+
 import { state } from './state';
 import { ref } from 'vue';
+
+import store from '../store/index'; // Adjust the path as per your actual file structure
+
+
+
+
 const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-export const fetchTasksForDay = async (day, categories) => {
-  console.log(`Checking localStorage for tasks_${day}`);
+export const fetchTasksForDay = async (day, categories, createdFlag) => {
+//console.log(createdFlag)
+if (createdFlag) {
+  //console.log("flag!!")
+  localStorage.removeItem(`tasks_${day}`);
+
+}
+  //console.log(`Checking localStorage for tasks_${day}`);
   const localData = localStorage.getItem(`tasks_${day}`);
   if (localData) {
     console.log(`Loaded tasks for ${day} from localStorage`);
@@ -13,7 +28,7 @@ export const fetchTasksForDay = async (day, categories) => {
     return;
   }
 
-  console.log(`Fetching tasks for ${day} from API`);
+  //console.log(`Fetching tasks for ${day} from API`);
   try {
     const response = await axios.get(`http://localhost:8000/api/tasks/${day.toLowerCase()}`);
    console.log("API response for", day, response.data);
@@ -34,6 +49,7 @@ export const fetchTasksForDay = async (day, categories) => {
 };
 
 export const markAsCompleted = (day, taskId, taskTime, categories) => {
+  store.commit('SET_LOADING', true);
   console.log(`Marking task ${taskId} (${taskTime}) as completed for ${day}`);
   //console.log(localStorage.getItem(`tasks_${day}`), "getitem")
   console.log("00", taskTime)
@@ -62,6 +78,8 @@ export const checkAttempt = async (taskId) => {
 
   try {
     const response = await axios.post(`http://localhost:8000/api/tasks/${taskId}/record-attempt`, attemptData);
+    store.commit('SET_SUCCESS', true);
+    
     console.log('Task attempt recorded:', response.data);
   } catch (error) {
     console.error('Error recording task attempt:', error);
@@ -86,6 +104,7 @@ export const fetchCategories = async (categories) => {
 
 
 export const createTask = async (task, errors, emit, categories) => {
+ 
   try {
     console.log('Task being sent:', task);
     const response = await axios.post('http://localhost:8000/api/tasks', task);
@@ -102,23 +121,36 @@ export const createTask = async (task, errors, emit, categories) => {
     console.log('Day index:', dayIndex);
     console.log('Start date:', startDate);
 
-    // Update local storage with the new task
+  /*  // Update local storage with the new task
     const storedTasks = JSON.parse(localStorage.getItem(`tasks_${day}`)) || [];
     storedTasks.push(response.data);
     localStorage.setItem(`tasks_${day}`, JSON.stringify(storedTasks));
-    console.log(`New task added to localStorage for ${day}`);
+    console.log(`New task added to localStorage for ${day}`); */
+  
+
+    for (const day of daysOfWeek) {
+      console.log(day, "day")
+      await fetchTasksForDay(day, categories, true)
+    }
 
     // Update the categories to include the new task
-    if (categories.value[day]) {
+   /* if (categories.value[day]) {
       categories.value[day].push(response.data);
     } else {
       categories.value[day] = [response.data];
-    }
+    }*/
 
-    emit('task-created', { day, task: response.data });
+   // emit('task-created', { day, task: response.data });
     state.showSuccess = true;
+
+
+
+    store.commit('SET_SUCCESS', true);
+    
+
   } catch (error) {
     if (error.response) {
+      store.commit('SET_FAILED', true);
       console.error('Error response:', error.response);
       if (error.response.data && error.response.data.errors) {
         Object.assign(errors, error.response.data.errors);

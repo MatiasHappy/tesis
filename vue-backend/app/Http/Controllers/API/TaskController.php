@@ -12,6 +12,13 @@ use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
+
+
+    // TODO::: RETURN AND HANDLE ERROR IF 
+
+
+
+
     public function index()
     {
         $tasks = Task::with('taskCategory')->get();
@@ -103,7 +110,7 @@ class TaskController extends Controller
                 'description' => 'nullable|string',
                 'repeat_interval' => 'nullable|integer',
                 'start_date' => 'required|date',
-                'end_date' => 'required|date',
+                'end_date' => 'nullable|date',
                 'time_of_day' => 'required|array',
                 'time_of_day.*' => 'in:morning,afternoon,evening,night',
                 'task_category_id' => 'nullable|exists:task_categories,id',

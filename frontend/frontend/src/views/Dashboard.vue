@@ -1,10 +1,14 @@
 <template>
-    <div class="">
-      <div v-if="user">
+  <MainH1 class="m-auto text-center mt-4 mb-2 text-5xl text-duty"> 
+    Weekly <span class="font-NovecentoRegular text-5xl text-fun">FLOW</span>
+  </MainH1>
+    <div class="h-full ">
+    
+     <!-- <div v-if="user">
         <p>Hello! {{ user.name }}</p>
-       
-        <!--  <p>Email: {{ user.email }}</p>-->
-      </div>
+      
+          <p>Email: {{ user.email }}</p>
+      </div>-->
      
       <Tabs/>
      
@@ -26,6 +30,7 @@
       
     };
   },
+  
   async created() {
     // Fetch user data when component is created (on application start)
     try {

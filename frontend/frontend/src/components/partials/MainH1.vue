@@ -1,5 +1,5 @@
 <template>
-    <h1 class="font-NovecentoCondBold text-5xl"><slot></slot></h1>
+    <h1 class="font-NovecentoCondBold text-3xl"><slot></slot></h1>
   </template>
   
   <script>

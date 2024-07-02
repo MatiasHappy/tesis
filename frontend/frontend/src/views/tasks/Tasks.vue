@@ -1,6 +1,10 @@
 <template>
     <div class="">
-        <Success v-if="state.showSuccess" @close="showSuccess = false" />
+      asdas
+      <MainH1 class="m-auto text-center mb-6 text-red-500"> 
+        Today's Schedule
+      </MainH1>
+      <Success v-if="state.showSuccess" @close="showSuccess = false" />
       <Tabs/>
   
     </div>
@@ -8,30 +12,28 @@
   
   <script>
   import Tabs from '../../components/Tabs.vue';
-  import Textarea from '../../components/Textarea.vue';
   import Success from '../../components/modals/Success.vue';
-  import { state } from '../../services/state'; // Import the shared state
-  
+  import { computed } from 'vue';
+  import { useStore } from 'vuex';
+
+
+      
+  console.log("stas")
   export default {
     name: 'Tasks',
     components: {
       Success,
-      Tabs,
-      Textarea
+      Tabs
     },
-    data() {
+    setup() {
+
+    
+ 
       return {
-      
-        state // Make the state available in the component's data
+        //successState,
+       //failedState
       };
-    },
-    methods: {
-      handleTaskCreated() {
-        this.showSuccess = true;
-      },
-      updateMessage() {
-        this.state.sharedMessage = 'Message changed by Tasks Component';
-      }
     }
   };
   </script>
+  

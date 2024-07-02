@@ -9,7 +9,7 @@ export default {
     async login(credentials) {
         try {
             const response = await apiClient.post('/login', credentials);
-            console.log("login data:", response.data.token)
+            console.log("store js log: 2?", response.data )
             localStorage.setItem('token', response.data.token); // Store token in localStorage
             apiClient.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`; // Set Authorization header globally
             return response.data;
@@ -24,7 +24,7 @@ export default {
     },
     getUser() {
         try {
-            const token = localStorage.getItem('token'); // Get token from localStorage
+            const token = localStorage.getItem('token'); 
             if (!token) {
                 throw new Error('No token available');
             }
