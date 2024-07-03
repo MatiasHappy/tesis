@@ -5,7 +5,7 @@
     <Completed v-if="successState" @close="successState = false" />
     <p v-if="failedState">Failed to create task.</p>
     <TabGroup>
-      <TabList class="flex space-x-12  top-0 py-2 bg-black p-1 overflow-auto  top-0 z-10">
+      <TabList class="flex space-x-12  top-0 py-1 border-duty border-b-4  p-1 overflow-auto  top-0 z-10">
         <Tab
           v-for="day in orderedDays"
           :key="day"
@@ -14,11 +14,11 @@
         >
           <button
             :class="[
-              'w-full px-6 rounded-lg py-2.5 text-xl font-medium leading-5',
-              'ring-white/60 ring-offset-2 ring-offset-fun focus:outline-none focus:ring-2',
+              'w-full px-4  font-sourceSans font-semibold py-1 text-lg font-medium leading-5 text-duty',
+              'focus:outline-none ',
               selected
-                ? 'bg-white text-black shadow font-NovecentoCondBold tracking-wide'
-                : 'text-white hover:bg-white/[0.12] hover:text-red font-NovecentoRegular ',
+                ? ' text-duty font-sourceSans uppercase border-b-4 border-duty tracking-wide'
+                : ' hover:bg-white/[0.12] hover:text-red font-NovecentoRegular ',
             ]"
           >
             {{ day }}
@@ -26,12 +26,12 @@
         </Tab>
       </TabList>
 
-      <TabPanels class=" px-2 h-full overflow-y-auto" style=" max-height:57vh">
+      <TabPanels class=" h-full overflow-y-auto" style=" max-height:57vh">
         <TabPanel
           v-for="(day, idx) in orderedDays"
           :key="idx"
           :class="[
-            'rounded-md',
+            '',
             '',
           ]"
         >
@@ -42,7 +42,7 @@
               v-for="item in orderedCategories[day]"
               :key="item.id"
               :class="[
-                'relative rounded-md p-3  my-4 ',
+                'relative  p-3 py-4  my-1 ',
                 {
                   'bg-duty': item.category_name === 'Duty',
                   'bg-habit': item.category_name === 'Habit',
@@ -85,14 +85,14 @@
                 <li v-if="item.duration != null">&middot;</li>
                 <li v-if="item.duration != null" class="rounded-full bg-white px-3 py-1 flex items-center justify-center">{{ item.duration }}</li>
               </ul>
-              <h3 class="text-3xl py-2 font-medium leading-5 font-NovecentoCondBold"
+              <h3 class="text-2xl mt-4 text-white tracking-wide  leading-5 font-NovecentoCondBold"
               
               :class="[
-                'relative rounded-md  font-NovecentoCondBold',
+                'relative rounded-md uppercase font-bold text-3xl font-SourceSans',
                 {
-                  'font-NovecentoCondBold text-white': item.category_name === 'Duty',
-                  'font-NovecentoCondRegular': item.category_name === 'Habit',
-                  'font-NovecentoRegular': item.category_name === 'Fun',
+                  ' ': item.category_name === 'Duty',
+                  '': item.category_name === 'Habit',
+                  '': item.category_name === 'Fun',
                 },]"
               >
                 {{ item.name }}

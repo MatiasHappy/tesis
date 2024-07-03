@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-col h-screen">
-    <nav class="flex-none">
-      <!--<Logo />
-   
+  <div class="flex flex-col h-screen font-SourceSans font-semibold">
+    <nav class="flex-none hidden">
+      <Logo />
+   <!--
       
        Add login/logout button or links based on isAuthenticated
       <button v-if="isAuthenticated" @click="logout">Logout</button>

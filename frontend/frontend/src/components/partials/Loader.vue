@@ -1,5 +1,5 @@
 <template>
-    <div class="iso w-8/12 m-auto" @click="startSpinning">
+    <div class="iso w-6/12 m-auto" @click="startSpinning">
       <img src="../../assets/imgs/iso.png" alt="DutyFlow iso" :class="{ spinning: isSpinning }">
     </div>
   </template>
@@ -9,7 +9,7 @@
     name: 'Loader',
     data() {
       return {
-        isSpinning: false
+        isSpinning: true
       };
     },
     methods: {

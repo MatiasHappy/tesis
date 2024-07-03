@@ -32,70 +32,86 @@
                     
                     <RadioGroup v-model="task.task_category_id" class="mt-2 grid grid-cols-3 gap-3 sm:grid-cols-6">
                       <RadioGroupOption as="template" v-for="category in categories" :key="category.id" :value="category.id" v-slot="{ active, checked }">
-                        <div :class="[ active ? 'ring-2 ring-black ring-duty' : '', checked ? 'bg-habit text-white hover:bg-habit' : 'bg-white text-gray-900 ring-1 ring-inset ring-duty hover:bg-gray-50', 'flex items-center justify-center rounded-md px-3 py-3 text-sm font-semibold uppercase sm:flex-1']">{{ category.name }}</div>
+                        <div class="bg-duty text-white font-SourceSans" :class="[ active ? 'ring-2 ring-black ring-duty ' : '', checked ? 'text-white  bg-dutyLight ' : ' ring-1 ring-inset ring-duty hover:bg-gray-50', 'flex items-center justify-center rounded-md px-3 py-3 text-sm font-semibold uppercase sm:flex-1']">{{ category.name }}</div>
                       </RadioGroupOption>
                     </RadioGroup>
                   </fieldset>
 
 
                   <div class="form-group my-4">
-                    <label for="name" class="block text-sm font-medium text-gray-700">
-
-                       Name
-                    
-                    
-                    </label>
-                    <input type="text" id="name" v-model="task.name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                    <MainLabel for="name" text="Name" />
+                    <MainInput
+                      v-model="task.name"
+                      id="name"
+                      name="name"
+                      type="text"
+                     
+                      autocomplete="off"
+                      required
+                    />
                     <span v-if="errors.name" class="text-red-500 text-sm">{{ errors.name[0] }}</span>
                   </div>
 
                   <div class="form-group mb-4">
-                    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <MainLabel for="description" text="Description" />
                     <textarea id="description" v-model="task.description" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
                     <span v-if="errors.description" class="text-red-500 text-sm">{{ errors.description[0] }}</span>
                   </div>
 
+                  <div class="grid grid-cols-2">
+                    <div class="form-group mb-4">
+                      <MainLabel for="time_of_day" text="Time Of Day" />
+                      <div class="mt-1">
+                        <div class="flex items-center mb-2">
+                          <input type="checkbox" id="morning" v-model="task.time_of_day" value="morning" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                          <label for="morning" class="ml-2 text-sm text-gray-700">Morning</label>
+                        </div>
+                        <div class="flex items-center mb-2">
+                          <input type="checkbox" id="afternoon" v-model="task.time_of_day" value="afternoon" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                          <label for="afternoon" class="ml-2 text-sm text-gray-700">Afternoon</label>
+                        </div>
+                        <div class="flex items-center mb-2">
+                          <input type="checkbox" id="evening" v-model="task.time_of_day" value="evening" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                          <label for="evening" class="ml-2 text-sm text-gray-700">Evening</label>
+                        </div>
+                        <div class="flex items-center mb-2">
+                          <input type="checkbox" id="night" v-model="task.time_of_day" value="night" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                          <label for="night" class="ml-2 text-sm text-gray-700">Night</label>
+                        </div>
+                      </div>
+                      <span v-if="errors.time_of_day" class="text-red-500 text-sm">{{ errors.time_of_day[0] }}</span>
+                    </div>
 
-                  <div class="form-group mb-4">
-                    <label for="time_of_day" class="block text-sm font-medium text-gray-700">Time of Day</label>
-                    <div class="mt-1">
-                      <div class="flex items-center mb-2">
-                        <input type="checkbox" id="morning" v-model="task.time_of_day" value="morning" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                        <label for="morning" class="ml-2 text-sm text-gray-700">Morning</label>
+
+                    <div class="">
+                      <div class="form-group mb-4">
+                        <MainLabel for="start_date" text="Start Date" />
+                      
+                        <input type="date" id="start_date" v-model="task.start_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required >
+                        <span v-if="errors.start_date" class="text-red-500 text-sm">{{ errors.start_date[0] }}</span>
                       </div>
-                      <div class="flex items-center mb-2">
-                        <input type="checkbox" id="afternoon" v-model="task.time_of_day" value="afternoon" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                        <label for="afternoon" class="ml-2 text-sm text-gray-700">Afternoon</label>
-                      </div>
-                      <div class="flex items-center mb-2">
-                        <input type="checkbox" id="evening" v-model="task.time_of_day" value="evening" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                        <label for="evening" class="ml-2 text-sm text-gray-700">Evening</label>
-                      </div>
-                      <div class="flex items-center mb-2">
-                        <input type="checkbox" id="night" v-model="task.time_of_day" value="night" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                        <label for="night" class="ml-2 text-sm text-gray-700">Night</label>
+    
+                      <div class="form-group mb-4">
+                        <MainLabel for="end_date" text="End Date" />
+                        <input type="date" id="end_date" v-model="task.end_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" >
+                        <span v-if="errors.end_date" class="text-red-500 text-sm">{{ errors.start_date[0] }}</span>
                       </div>
                     </div>
-                    <span v-if="errors.time_of_day" class="text-red-500 text-sm">{{ errors.time_of_day[0] }}</span>
                   </div>
-
                   
-                  <div class="form-group mb-4">
-                    <label for="start_date" class="block text-sm font-medium text-gray-700">Start Date</label>
-                    <input type="date" id="start_date" v-model="task.start_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
-                    <span v-if="errors.start_date" class="text-red-500 text-sm">{{ errors.start_date[0] }}</span>
-                  </div>
+
+                
 
                   <div class="form-group mb-4">
-                    <label for="end_date" class="block text-sm font-medium text-gray-700">End Date</label>
-                    <input type="date" id="end_date" v-model="task.end_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" >
-                    <span v-if="errors.end_date" class="text-red-500 text-sm">{{ errors.start_date[0] }}</span>
-                  </div>
-
-
-                  <div class="form-group mb-4">
-                    <label for="repeat_interval" class="block text-sm font-medium text-gray-700">Repeat Interval (days)</label>
-                    <input type="number" id="repeat_interval" v-model="task.repeat_interval" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    <MainLabel for="repeat_interval" text="Repeat Interval (days)" />
+                    <MainInput
+                      v-model="task.repeat_interval"
+                      id="repeat_interval"
+                      name="repeat_interval"
+                      type="number"
+                   
+                      autocomplete="off"
+                    />
                     <small class="form-text text-muted">Leave empty if this is a one-time task.</small>
                     <span v-if="errors.repeat_interval" class="text-red-500 text-sm">{{ errors.repeat_interval[0] }}</span>
                   </div>
@@ -122,6 +138,9 @@
 </template>
 
 <script setup>
+import MainInput from '../partials/MainInput.vue'
+import MainLabel from '../partials/MainLabel.vue'
+
 import { ref, reactive, onMounted, watch } from 'vue';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot, RadioGroup, RadioGroupOption } from '@headlessui/vue';
 import { CheckIcon } from '@heroicons/vue/24/outline';

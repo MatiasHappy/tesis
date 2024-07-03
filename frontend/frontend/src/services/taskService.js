@@ -246,3 +246,35 @@ export const fetchTask = async (id) => {
 };
 
 // ATTEMPT FUNCTIONALITY 
+
+export const updateTask = async (taskId, taskData) => {
+  try {
+    const response = await axios.put(`http://localhost:8000/api/tasks/${taskId}`, taskData);
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      if (error.response.status === 422) {
+        throw error.response.data.errors; // Throw validation errors
+      } else {
+        // Throw any other errors returned by the server
+        throw new Error(error.response.data.message || 'Failed to update task');
+      }
+    } else {
+      // Handle any network or other errors
+      throw new Error('Network error or server is not reachable');
+    }
+  }
+};
+
+
+export const deleteTask = async (taskId) => {
+  try {
+    await axios.delete(`http://localhost:8000/api/tasks/${taskId}`);
+    const token = localStorage.getItem('token'); // Save the token
+    localStorage.clear(); // Clear all items
+    localStorage.setItem('token', token); // Restore the token
+ 
+  } catch (error) {
+    throw new Error('Failed to delete task');
+  }
+};

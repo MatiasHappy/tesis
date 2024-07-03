@@ -75,6 +75,22 @@ class Kernel extends ConsoleKernel
         $tasks = Task::with(['taskCategory', 'taskTimes', 'taskAttempts'])->get()->filter(function ($task) use ($targetDate) {
             $startDate = Carbon::parse($task->start_date)->startOfDay();
     
+
+            // TEST WHEN HOME :::::
+
+            /*
+
+
+$tasks = Task::with(['taskCategory', 'taskTimes', 'taskAttempts' => function ($query) use ($targetDate) {
+    // Filter task attempts by today's date
+    $query->whereDate('created_at', $targetDate->format('Y-m-d'));
+}])->get()->filter(function ($task) use ($targetDate) {
+    $startDate = Carbon::parse($task->start_date)->startOfDay();
+
+*/
+
+
+
             // Check if repeat_interval is not null and greater than 0
             if ($task->repeat_interval !== null && $task->repeat_interval > 0) {
                 return $startDate->diffInDays($targetDate) % $task->repeat_interval === 0;
@@ -87,8 +103,9 @@ class Kernel extends ConsoleKernel
     
         // Transform tasks to include duplicates for multiple times
         $transformedTasks = [];
-    
+        Log::info($tasks . "     TASJKSSSSSSS");
         foreach ($tasks as $task) {
+            Log::info(count($task->taskTimes) . "     TIMESS");
             $categoryName = $task->taskCategory->name;
             foreach ($task->taskTimes as $time) {
                 $duplicatedTask = clone $task;
@@ -115,6 +132,18 @@ class Kernel extends ConsoleKernel
     
         $sortedTasks = $this->sortTasksByTimeOfDay($transformedTasks, 'morning');
     
+
+
+        // CHECK IF COMPLETED?? 
+  foreach ($sortedTasks as $task )
+        {
+            Log::info("Testing info?????????????? " . count($task->taskAttempts));
+            
+        }
+
+
+
+
         return $sortedTasks;
     }
 

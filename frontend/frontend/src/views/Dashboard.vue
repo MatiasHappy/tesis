@@ -1,7 +1,8 @@
 <template>
-  <MainH1 class="m-auto text-center mt-4 mb-2 text-5xl text-duty"> 
+  <MainH1 class="hidden m-auto text-center mt-4 mb-2 text-5xl text-duty"> 
     Weekly <span class="font-NovecentoRegular text-5xl text-fun">FLOW</span>
   </MainH1>
+  <Logo3 class="w-10/12 m-auto mb-4 mt-8" />
     <div class="h-full ">
     
      <!-- <div v-if="user">
@@ -19,7 +20,7 @@
   import Tabs from '../components/Tabs.vue'
   import Textarea from '../components/Textarea.vue'
   import authService from '../services/authService'; // Import your authentication service
-
+import Logo3 from '../components/partials/Logo3.vue'
 
   export default {
     name: 'Dashboard',
@@ -42,7 +43,8 @@
   },
     components: {
     Tabs,
-    Textarea
+    Textarea,
+    Logo3
   }
   }
   </script>

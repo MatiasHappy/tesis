@@ -11,6 +11,7 @@ class Task extends Model
 
     protected $fillable = [
         'name',
+        'description',
         'repeat_interval',
         'start_date',
         'end_date',
