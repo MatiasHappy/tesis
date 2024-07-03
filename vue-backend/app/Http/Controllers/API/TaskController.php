@@ -159,25 +159,121 @@ class TaskController extends Controller
     
     
     
-
     public function update(Request $request, $id)
     {
-        $task = Task::findOrFail($id);
-        $task->update($request->all());
-        $task->load('taskCategory');
-        $task->category_name = $task->taskCategory->name;
-        unset($task->taskCategory); // Optionally remove the relationship to avoid redundant data
+        try {
+            // Define custom error messages
+            $messages = [
+                'name.required' => 'The task name is required.',
+                'name.max' => 'The task name must not exceed 100 characters.',
+                'description.string' => 'The description must be a string.',
+                'repeat_interval.integer' => 'The repeat interval must be an integer.',
+                'start_date.date' => 'The start date must be a valid date.',
+                'end_date.date' => 'The end date must be a valid date.',
+                'time_of_day.array' => 'The time of day must be an array.',
+                'time_of_day.*.in' => 'The time of day must be one of the following: morning, afternoon, evening, night.',
+                'task_category_id.exists' => 'The selected task category is invalid.',
+            ];
     
-        return response()->json($task);
+            // Validate the request data
+            $validatedData = $request->validate([
+                'name' => 'nullable|string|max:100',
+                'description' => 'nullable|string',
+                'repeat_interval' => 'nullable|integer',
+                'start_date' => 'nullable|date',
+                'end_date' => 'nullable|date',
+                'time_of_day' => 'nullable|array',
+                'time_of_day.*' => 'in:morning,afternoon,evening,night',
+                'task_category_id' => 'nullable|exists:task_categories,id',
+            ], $messages);
+    
+            \Log::info('Validated data', ['validatedData' => $validatedData]);
+    
+            // Find the task
+            $task = Task::findOrFail($id);
+    
+            // Extract time_of_day from validated data
+            $timeOfDay = $validatedData['time_of_day'] ?? [];
+            unset($validatedData['time_of_day']);
+    
+            // Update the task without the time_of_day field
+            $task->update($validatedData);
+    
+            // Delete existing task times
+            TaskTime::where('task_id', $task->id)->delete();
+    
+            // Create the new task times
+            foreach ($timeOfDay as $time) {
+                TaskTime::create([
+                    'task_id' => $task->id,
+                    'time' => $time,
+                ]);
+            }
+    
+            // Load the related task category if it exists
+            if ($task->task_category_id) {
+                $task->load('taskCategory');
+                $task->category_name = $task->taskCategory->name;
+                // Optionally remove the relationship to avoid redundant data
+                unset($task->taskCategory);
+            }
+    
+            // Return the updated task with task times
+            return response()->json($task->load('taskTimes'), 200);
+    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation errors
+            return response()->json([
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            // Log the error message
+            \Log::error('Error updating task: ' . $e->getMessage());
+            // Handle any other errors
+            return response()->json([
+                'error' => 'An error occurred while updating the task.'
+            ], 500);
+        }
     }
+    
     
     public function destroy($id)
     {
-        Task::destroy($id);
-        return response()->json(null, 204);
+        try {
+            // Find the task
+            $task = Task::with('taskTimes', 'taskAttempts')->findOrFail($id);
+    
+            // Begin a transaction to ensure data integrity
+            \DB::beginTransaction();
+    
+            // Delete associated task times
+            $task->taskTimes()->delete();
+    
+            // Delete associated task attempts
+            $task->taskAttempts()->delete();
+    
+            // Delete the task
+            $task->delete();
+    
+            // Commit the transaction
+            \DB::commit();
+    
+            return response()->json(['message' => 'Task deleted successfully.'], 200);
+    
+        } catch (\Exception $e) {
+            // Rollback the transaction in case of error
+            \DB::rollBack();
+    
+            // Log the error message
+            \Log::error('Error deleting task: ' . $e->getMessage());
+    
+            // Handle any other errors
+            return response()->json([
+                'error' => 'An error occurred while deleting the task.'
+            ], 500);
+        }
     }
-
-
+    
 
 
 
@@ -206,7 +302,7 @@ class TaskController extends Controller
             $task = Task::with(['taskCategory', 'taskTimes', 'taskAttempts'])->findOrFail($id);
 
             // Log the task details for debugging
-            Log::info('Task fetched successfully', ['task' => $task]);
+            //Log::info('Task fetched successfully', ['task' => $task]);
 
             // Ensure the related models are not null
             if (!$task->taskCategory) {

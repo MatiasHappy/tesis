@@ -2,19 +2,27 @@
   <div class="bg-white border-t-2 border-gray-400">
     <div class="grid grid-cols-5 pt-5 pb-2"> 
       <div class="flex border-r-2 m-auto"> 
-        <HomeIcon class="w-1/2 m-auto text-duty" />
+        <router-link to="/dashboard">
+          <HomeIcon class="w-1/2 m-auto text-duty" />
+        </router-link>
       </div>
       <div class="flex">
-        <ClipboardDocumentCheckIcon class="w-1/2 m-auto text-duty" />
+        <router-link to="/tasks">
+          <ClipboardDocumentCheckIcon class="w-1/2 m-auto text-duty" />
+        </router-link>
       </div>
       <div class="rounded-full m-auto">
         <IsoButton @click="openModal" />
       </div>
       <div class="flex border-r-2"> 
-        <BanknotesIcon class="w-1/2 m-auto text-duty" />
+        <router-link to="/tasks">
+          <BanknotesIcon class="w-1/2 m-auto text-duty" />
+        </router-link>
       </div>
       <div class="flex">
-        <CalendarDaysIcon class="w-1/2 m-auto text-duty" />
+        <router-link to="/tasks">
+          <CalendarDaysIcon class="w-1/2 m-auto text-duty" />
+        </router-link>
       </div>
     </div>
     <CreateTask :open="isCreateTaskOpen" @update:open="isCreateTaskOpen = $event" />

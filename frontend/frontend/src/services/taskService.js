@@ -61,7 +61,7 @@ export const markAsCompleted = (day, taskId, taskTime, categories) => {
     localStorage.setItem(`tasks_${day}`, JSON.stringify(categories.value[day]));
     //console.log(JSON.stringify(categories.value[day]));
     
-    checkAttempt(taskId); // Record attempt for the specific task time
+    checkAttempt(taskId, 'completed'); // Record attempt for the specific task time
     
     console.log(`Updated tasks for ${day} saved to localStorage`);
   } else {
@@ -69,13 +69,76 @@ export const markAsCompleted = (day, taskId, taskTime, categories) => {
   }
 };
 
-export const checkAttempt = async (taskId) => {
+
+// Function to check and mark tasks as failed if not completed
+/*export const markAsFailed = async (day, taskId, taskTime, categories) => {
+  const currentHour = new Date().getHours();
+console.log('1 entering failed fc' , currentHour);
+
+console.log(Object.keys(categories.value), '2 object keys categories value')
+  // Iterate over each day and its tasks
+  for (const day of Object.keys(categories.value)) {
+    console.log('3 entering first for' );
+
+    for (const task of categories.value[day]) {
+      console.log('4 entering second for' );
+      console.log(task, '5 task in second for>> ')
+      // Check if morning task is not completed and mark as failed
+      const morningTask = task.task_times.find(time => time.time === 'morning');
+
+      console.log(morningTask, '6 find in task.task_times')
+
+
+      if (morningTask && !morningTask.completed && currentHour >= 12) {
+        morningTask.failed = true; // Mark task time as failed
+        
+        // Register failed attempt via API call
+        await checkAttempt(task.id, 'failed');
+      }
+      // Add similar checks for other times of day if needed (afternoon, evening, night)
+    }
+  }
+}; */
+
+
+export const markAsFailed = async (day, taskId, taskTime, categories) => {
+  const currentHour = new Date().getHours();
+console.log('1 entering failed fc' , currentHour);
+
+console.log(Object.keys(categories.value), '2 object keys categories value')
+  // Iterate over each day and its tasks
+  for (const day of Object.keys(categories.value)) {
+    console.log('3 entering first for' );
+
+    for (const task of categories.value[day]) {
+      console.log('4 entering second for' );
+      console.log(task, '5 task in second for>> ')
+      // Check if morning task is not completed and mark as failed
+      const morningTask = task.task_times.find(time => time.time === 'morning');
+
+      console.log(morningTask, '6 find in task.task_times')
+
+
+      if (morningTask && !morningTask.completed && currentHour >= 12) {
+        morningTask.failed = true; // Mark task time as failed
+        
+        // Register failed attempt via API call
+        //await checkAttempt(task.id, 'failed');
+      }
+      // Add similar checks for other times of day if needed (afternoon, evening, night)
+    }
+  }
+};
+
+
+
+export const checkAttempt = async (taskId, status) => {
   const attemptData = {
     attempt_date: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
-    status: 'completed', 
+    status, 
   
   };
-
+console.log('checkAttempt FC' , attemptData)
   try {
     const response = await axios.post(`http://localhost:8000/api/tasks/${taskId}/record-attempt`, attemptData);
     store.commit('SET_SUCCESS', true);
@@ -183,3 +246,35 @@ export const fetchTask = async (id) => {
 };
 
 // ATTEMPT FUNCTIONALITY 
+
+export const updateTask = async (taskId, taskData) => {
+  try {
+    const response = await axios.put(`http://localhost:8000/api/tasks/${taskId}`, taskData);
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      if (error.response.status === 422) {
+        throw error.response.data.errors; // Throw validation errors
+      } else {
+        // Throw any other errors returned by the server
+        throw new Error(error.response.data.message || 'Failed to update task');
+      }
+    } else {
+      // Handle any network or other errors
+      throw new Error('Network error or server is not reachable');
+    }
+  }
+};
+
+
+export const deleteTask = async (taskId) => {
+  try {
+    await axios.delete(`http://localhost:8000/api/tasks/${taskId}`);
+    const token = localStorage.getItem('token'); // Save the token
+    localStorage.clear(); // Clear all items
+    localStorage.setItem('token', token); // Restore the token
+ 
+  } catch (error) {
+    throw new Error('Failed to delete task');
+  }
+};

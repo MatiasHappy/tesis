@@ -11,12 +11,15 @@ class Task extends Model
 
     protected $fillable = [
         'name',
+        'description',
         'repeat_interval',
         'start_date',
         'end_date',
         'duration',
         'time_of_day',
-        'task_category_id'
+        'task_category_id',
+        'task_ended'
+
     ];
 
     

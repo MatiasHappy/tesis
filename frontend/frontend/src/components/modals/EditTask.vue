@@ -1,0 +1,182 @@
+<template>
+    <TransitionRoot as="template" :show="open">
+      <Dialog class="relative z-10 font-NovecentoRegular text-black" @close="closeModal">
+        <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
+          <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+        </TransitionChild>
+        
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+          <div class="flex min-h-full w-full items-center justify-center p-4 text-center sm:items-center sm:p-0">
+            <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+              <DialogPanel class="relative w-full transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
+                <div>
+                  <div class="hidden mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                    <CheckIcon class="h-6 w-6 text-green-600" aria-hidden="true" />
+                  </div>
+                  <div class="mt-3 text-center sm:mt-5">
+                    <DialogTitle as="h3" class="text-2xl tracking-widest font-NovecentoCondBold text-duty">Edit Task</DialogTitle>
+          
+                  </div>
+                </div>
+                <div class="mt-2 sm:mt-6">
+                  <form @submit.prevent="handleEditTask">
+                    <fieldset aria-label="Choose a Category" class="mb-8">
+                      <RadioGroup v-model="localTask.task_category_id" class="mt-2 grid grid-cols-3 gap-3 sm:grid-cols-6">
+                        <RadioGroupOption as="template" v-for="category in categories" :key="category.id" :value="category.id" v-slot="{ active, checked }">
+                          <div class="bg-duty text-white font-SourceSans" :class="[ active ? 'ring-2 ring-black ring-duty ' : '', checked ? 'text-white  bg-dutyLight ' : ' ring-1 ring-inset ring-duty hover:bg-gray-50', 'flex items-center justify-center rounded-md px-3 py-3 text-sm font-semibold uppercase sm:flex-1']">{{ category.name }}</div>
+                        </RadioGroupOption>
+                      </RadioGroup>
+                    </fieldset>
+  
+                    <div class="form-group my-4">
+                      <MainLabel for="name" text="Name" />
+                      <MainInput v-model="localTask.name" id="name" name="name" type="text" autocomplete="off" required />
+                      <span v-if="errors.name" class="text-red-500 text-sm">{{ errors.name[0] }}</span>
+                    </div>
+  
+                    <div class="form-group mb-4">
+                      <MainLabel for="description" text="Description" />
+                      <textarea id="description" v-model="localTask.description" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                      <span v-if="errors.description" class="text-red-500 text-sm">{{ errors.description[0] }}</span>
+                    </div>
+  
+                    <div class="grid grid-cols-2">
+                      <div class="form-group mb-4">
+                        <MainLabel for="time_of_day" text="Time Of Day" />
+                        <div class="mt-1">
+                          <div class="flex items-center mb-2">
+                            <input type="checkbox" id="morning" v-model="localTask.time_of_day" value="morning" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <label for="morning" class="ml-2 text-sm text-gray-700">Morning</label>
+                          </div>
+                          <div class="flex items-center mb-2">
+                            <input type="checkbox" id="afternoon" v-model="localTask.time_of_day" value="afternoon" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <label for="afternoon" class="ml-2 text-sm text-gray-700">Afternoon</label>
+                          </div>
+                          <div class="flex items-center mb-2">
+                            <input type="checkbox" id="evening" v-model="localTask.time_of_day" value="evening" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <label for="evening" class="ml-2 text-sm text-gray-700">Evening</label>
+                          </div>
+                          <div class="flex items-center mb-2">
+                            <input type="checkbox" id="night" v-model="localTask.time_of_day" value="night" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <label for="night" class="ml-2 text-sm text-gray-700">Night</label>
+                          </div>
+                        </div>
+                        <span v-if="errors.time_of_day" class="text-red-500 text-sm">{{ errors.time_of_day[0] }}</span>
+                      </div>
+  
+                      <div class="">
+                        <div class="form-group mb-4">
+                          <MainLabel for="start_date" text="Start Date" />
+                          <input type="date" id="start_date" v-model="localTask.start_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                          <span v-if="errors.start_date" class="text-red-500 text-sm">{{ errors.start_date[0] }}</span>
+                        </div>
+  
+                        <div class="form-group mb-4">
+                          <MainLabel for="end_date" text="End Date" />
+                          <input type="date" id="end_date" v-model="localTask.end_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                          <span v-if="errors.end_date" class="text-red-500 text-sm">{{ errors.end_date[0] }}</span>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="form-group mb-4">
+                      <MainLabel for="repeat_interval" text="Repeat Interval (days)" />
+                      <MainInput v-model="localTask.repeat_interval" id="repeat_interval" name="repeat_interval" type="number" autocomplete="off" />
+                      
+                      <span v-if="errors.repeat_interval" class="text-red-500 text-sm">{{ errors.repeat_interval[0] }}</span>
+                    </div>
+  
+                    <div class="mt-5 sm:mt-6">
+                      <button type="submit" class="inline-flex w-full justify-center rounded-md border border-transparent bg-duty px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save Changes</button>
+                    </div>
+                  </form>
+  
+                  <div class="mt-5 sm:mt-6">
+                    <button type="button" class="inline-flex w-full justify-center rounded-md bg-duty px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-duty" @click="closeModal">Go back to dashboard</button>
+                  </div>
+                </div>
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+  </template>
+  
+  <script setup>
+  import MainInput from '../../components/partials/MainInput.vue';
+  import MainLabel from '../../components/partials/MainLabel.vue';
+  import { ref, reactive, watch, onMounted } from 'vue';
+  import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot, RadioGroup, RadioGroupOption } from '@headlessui/vue';
+  import { CheckIcon } from '@heroicons/vue/24/outline';
+  import { fetchCategories, updateTask } from '../../services/taskService';
+  
+  const props = defineProps({
+    open: {
+      type: Boolean,
+      default: false
+    },
+    task: {
+      type: Object,
+      required: true
+    }
+  });
+  
+  const emit = defineEmits(['update:open', 'task-updated']);
+  console.log(props.task, "prop task 22")
+  const localTask = reactive({
+    ...props.task,
+    //time_of_day: props.task.task_times.map(time => time.time)
+  });
+  const categories = ref([]);
+  const errors = reactive({});
+
+  const handleEditTask = async () => {
+    try {
+      const updatedTask = {
+        ...localTask,
+        task_times: localTask.time_of_day.map(time => ({ time }))
+      };
+      await updateTask(localTask.id, updatedTask);
+      console.log("hello?")
+      emit('task-updated', localTask);
+      closeModal();
+    } catch (err) {
+    console.error('Failed to update task:', err);
+   
+      Object.assign(errors, err);
+  console.log(errors.name)
+      // Handle any other non-validation errors
+      console.error('Unexpected error:', err);
+    
+  }
+};
+  
+  const closeModal = () => {
+    emit('update:open', false);
+  };
+  
+  watch(() => props.open, (newValue) => {
+    if (newValue) {
+      Object.assign(localTask, {
+        ...props.task,
+        time_of_day: props.task.task_times.map(time => time.time)
+      });
+    }
+  });
+  
+  onMounted(() => {
+    fetchCategories(categories);
+  });
+  </script>
+  
+  <style scoped>
+  .attempt-details {
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+    background-color: #f7fafc;
+    margin-bottom: 0.5rem;
+  }
+  </style>
+  
