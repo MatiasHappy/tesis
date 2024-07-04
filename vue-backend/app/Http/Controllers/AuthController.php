@@ -29,28 +29,34 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'User registered successfully'], 201);
     }
-
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
-
+    
         if (!Auth::attempt($credentials)) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
-
+    
         $user = $request->user();
         $token = $user->createToken('SPA')->plainTextToken;
-
+    
         return response()->json([
             'token' => $token,
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'date_of_birth' => $user->date_of_birth,
+                'gender' => $user->gender,
+                'household' => $user->household ? [
+                    'id' => $user->household->id,
+                    'name' => $user->household->name,
+                ] : null,
             ]
         ], 200);
     }
-
+    
+    
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

@@ -11,6 +11,7 @@ export default {
             const response = await apiClient.post('/login', credentials);
             console.log("store js log: 2?", response.data )
             localStorage.setItem('token', response.data.token); // Store token in localStorage
+            localStorage.setItem('user', JSON.stringify(response.data.user));
             apiClient.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`; // Set Authorization header globally
             return response.data;
         } catch (error) {
