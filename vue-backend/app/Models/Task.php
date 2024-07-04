@@ -18,11 +18,27 @@ class Task extends Model
         'duration',
         'time_of_day',
         'task_category_id',
-        'task_ended'
+        'task_ended',
+        'created_by',
+        'household_id'
 
     ];
 
-    
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'household_user', 'household_id', 'user_id');
+    }
+
+    public function household()
+    {
+        return $this->belongsTo(Household::class);
+    }
+
     public function taskCategory()
     {
         return $this->belongsTo(TaskCategory::class);

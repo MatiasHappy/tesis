@@ -6,6 +6,8 @@ use Illuminate\Database\Seeder;
 use App\Models\Task;
 use App\Models\TaskCategory;
 use App\Models\TaskTime;
+use App\Models\User;
+use App\Models\Household;
 use Carbon\Carbon;
 
 class TaskSeeder extends Seeder
@@ -65,10 +67,16 @@ class TaskSeeder extends Seeder
             ],
         ];
 
+        $household = Household::first(); // Assume you want to assign the first household to all tasks
+
         foreach ($tasks as $taskData) {
             $taskTimes = $taskData['task_times'];
             unset($taskData['task_times']);
             
+            // Assign a random user as the creator
+            $taskData['created_by'] = User::inRandomOrder()->first()->id;
+            $taskData['household_id'] = $household->id;
+
             $task = Task::create($taskData);
 
             foreach ($taskTimes as $time) {
@@ -80,3 +88,4 @@ class TaskSeeder extends Seeder
         }
     }
 }
+

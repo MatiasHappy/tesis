@@ -103,6 +103,7 @@ class TaskController extends Controller
     
     public function store(Request $request)
     {
+        \Log::info("Request data: ", $request->all());
         try {
             // Validate the request data
             $validatedData = $request->validate([
@@ -114,11 +115,14 @@ class TaskController extends Controller
                 'time_of_day' => 'required|array',
                 'time_of_day.*' => 'in:morning,afternoon,evening,night',
                 'task_category_id' => 'nullable|exists:task_categories,id',
+                'created_by' => 'required|integer',
             ]);
     
             // Extract time_of_day from validated data
             $timeOfDay = $validatedData['time_of_day'];
             unset($validatedData['time_of_day']);
+    
+            \Log::info("Validated data: ", $validatedData);
     
             // Create the task without the time_of_day field
             $task = Task::create($validatedData);
@@ -156,7 +160,6 @@ class TaskController extends Controller
             ], 500);
         }
     }
-    
     
     
     public function update(Request $request, $id)

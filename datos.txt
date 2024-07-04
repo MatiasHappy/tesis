@@ -1,0 +1,4 @@
+Carrera, materia, cuatrimestre, año, turno, comisión, apellido y nombre,
+docente, carácter de entrega (2do parcial).
+
+Diseño y Programación Web // Clientes Web Mobile // 2024 // noche // Garcia Brunelli Matias // Santiago Gallino // 2Do Parcial

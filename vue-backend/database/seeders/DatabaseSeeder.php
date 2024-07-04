@@ -15,9 +15,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
             
            //TaskCategorySeeder::class,
+           UserSeeder::class,
+            HouseholdSeeder::class,
             TaskSeeder::class,
             AttemptSeeder::class,
-            UserSeeder::class
+
 
         ]);
         // \App\Models\User::factory(10)->create();
