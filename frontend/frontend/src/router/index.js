@@ -11,7 +11,7 @@ const routes = [
   { path: '/login', component: Login, meta: { guestOnly: true } }, 
   { path: '/register', component: Register, meta: { guestOnly: true } }, 
   { path: '/dashboard', component: Dashboard, meta: { requiresAuth: true } },
-
+  { path: '/', component: Dashboard, meta: { requiresAuth: true } },
   {
     path: '/tasks',
     name: 'Tasks',

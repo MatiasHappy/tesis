@@ -14,7 +14,7 @@
                   <CheckIcon class="h-6 w-6 text-green-600" aria-hidden="true" />
                 </div>
                 <div class="mt-3 text-center sm:mt-5">
-                  <DialogTitle as="h3" class="text-2xl tracking-widest  font-NovecentoCondBold text-duty">What’s our next priority?</DialogTitle>
+                  <DialogTitle as="h3" class="text-2xl tracking-widest font-NovecentoCondBold text-duty">What’s our next priority?</DialogTitle>
                   <div class="mt-2">
                     <p class="text-sm text-gray-500">Choose your Flow</p>
                   </div>
@@ -22,21 +22,17 @@
               </div>
               <div class="mt-2 sm:mt-6">
                 <form @submit.prevent="handleCreateTask">
-
-
                   <fieldset aria-label="Choose a Category" class="mb-8">
                     <div class="hidden flex items-center justify-between">
                       <div class="text-sm font-medium leading-6 text-gray-900">RAM</div>
-
                     </div>
                     
                     <RadioGroup v-model="task.task_category_id" class="mt-2 grid grid-cols-3 gap-3 sm:grid-cols-6">
                       <RadioGroupOption as="template" v-for="category in categories" :key="category.id" :value="category.id" v-slot="{ active, checked }">
-                        <div class="bg-duty text-white font-SourceSans" :class="[ active ? 'ring-2 ring-black ring-duty ' : '', checked ? 'text-white  bg-dutyLight ' : ' ring-1 ring-inset ring-duty hover:bg-gray-50', 'flex items-center justify-center rounded-md px-3 py-3 text-sm font-semibold uppercase sm:flex-1']">{{ category.name }}</div>
+                        <div class="bg-duty text-white font-SourceSans" :class="[ active ? 'ring-2 ring-black ring-duty bg-fun ' : '', checked ? 'text-white  bg-dutyLight ' : ' ring-1 ring-inset ring-duty hover:bg-gray-50', 'flex items-center justify-center rounded-md px-3 py-3 text-sm font-semibold uppercase sm:flex-1']">{{ category.name }}</div>
                       </RadioGroupOption>
                     </RadioGroup>
                   </fieldset>
-
 
                   <div class="form-group my-4">
                     <MainLabel for="name" text="Name" />
@@ -45,7 +41,6 @@
                       id="name"
                       name="name"
                       type="text"
-                     
                       autocomplete="off"
                       required
                     />
@@ -82,25 +77,20 @@
                       <span v-if="errors.time_of_day" class="text-red-500 text-sm">{{ errors.time_of_day[0] }}</span>
                     </div>
 
-
                     <div class="">
                       <div class="form-group mb-4">
                         <MainLabel for="start_date" text="Start Date" />
-                      
-                        <input type="date" id="start_date" v-model="task.start_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required >
+                        <input type="date" id="start_date" v-model="task.start_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
                         <span v-if="errors.start_date" class="text-red-500 text-sm">{{ errors.start_date[0] }}</span>
                       </div>
     
                       <div class="form-group mb-4">
                         <MainLabel for="end_date" text="End Date" />
-                        <input type="date" id="end_date" v-model="task.end_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" >
-                        <span v-if="errors.end_date" class="text-red-500 text-sm">{{ errors.start_date[0] }}</span>
+                        <input type="date" id="end_date" v-model="task.end_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <span v-if="errors.end_date" class="text-red-500 text-sm">{{ errors.end_date[0] }}</span>
                       </div>
                     </div>
                   </div>
-                  
-
-                
 
                   <div class="form-group mb-4">
                     <MainLabel for="repeat_interval" text="Repeat Interval (days)" />
@@ -109,16 +99,21 @@
                       id="repeat_interval"
                       name="repeat_interval"
                       type="number"
-                   
                       autocomplete="off"
                     />
                     <small class="form-text text-muted">Leave empty if this is a one-time task.</small>
                     <span v-if="errors.repeat_interval" class="text-red-500 text-sm">{{ errors.repeat_interval[0] }}</span>
                   </div>
 
-                 
-
-                
+                  <MainInput
+                    v-model="task.created_by"
+                    id="user_id"
+                    name="created_by"
+                    type="hidden"
+                    :value="user.id"
+                    autocomplete="off"
+                  />
+                  {{ user.id }}
 
                   <div class="mt-5 sm:mt-6">
                     <button type="submit" class="inline-flex w-full justify-center rounded-md border border-transparent bg-duty px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Create Task</button>
@@ -138,17 +133,18 @@
 </template>
 
 <script setup>
-import MainInput from '../partials/MainInput.vue'
-import MainLabel from '../partials/MainLabel.vue'
-
-import { ref, reactive, onMounted, watch } from 'vue';
+import MainInput from '../partials/MainInput.vue';
+import MainLabel from '../partials/MainLabel.vue';
+import { useStore } from 'vuex';
+import { ref, reactive, onMounted, watch, computed } from 'vue';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot, RadioGroup, RadioGroupOption } from '@headlessui/vue';
 import { CheckIcon } from '@heroicons/vue/24/outline';
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router';
 import { fetchCategories, createTask } from '../../services/taskService';
-import { state } from '../../services/state';
 
-
+const store = useStore();
+const isAuthenticated = computed(() => store.getters.isAuthenticated);
+const user = computed(() => store.state.user);
 
 const props = defineProps({
   open: {
@@ -166,19 +162,17 @@ const task = reactive({
   end_date: '',
   task_category_id: null,
   time_of_day: [],
+  created_by: '',
 });
 const categories = ref([]);
 const errors = reactive({});
 
-const router = useRouter()
-const route = useRoute()
-
-console.log("categories", categories);
+const router = useRouter();
+const route = useRoute();
 
 const handleCreateTask = async () => {
-  console.log(task, "SUPER IMPORTANT TASK")
-  await createTask(task, errors,emit, categories);
- // router.go(0)
+  console.log(task, "SUPER IMPORTANT TASK");
+  await createTask(task, errors, emit, categories);
 };
 
 const closeModal = () => {
@@ -187,7 +181,9 @@ const closeModal = () => {
 
 onMounted(() => {
   fetchCategories(categories);
-
+  if (isAuthenticated.value && user.value) {
+    task.created_by = user.value.id;
+  }
 });
 
 watch(() => props.open, (newValue) => {
@@ -199,9 +195,14 @@ watch(() => props.open, (newValue) => {
     task.end_date = '';
     task.task_category_id = null;
     task.time_of_day = [];
+    task.created_by = '';
     Object.keys(errors).forEach(key => {
       delete errors[key];
     });
+  } else {
+    if (isAuthenticated.value && user.value) {
+      task.created_by = user.value.id;
+    }
   }
 });
 </script>
