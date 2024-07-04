@@ -28,7 +28,7 @@ class TaskSeeder extends Seeder
         // Sample tasks
         $tasks = [
             [
-                'name' => 'STOP THE MANDESS !!',
+                'name' => 'Mop The Floor',
                 'task_category_id' => 1, // Duty
                 'repeat_interval' => 1, // every 1 day
                 'start_date' => Carbon::now()->toDateString(), // started today
