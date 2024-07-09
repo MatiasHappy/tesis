@@ -204,11 +204,15 @@ export const createTask = async (task, errors, emit, categories) => {
     }*/
 
    // emit('task-created', { day, task: response.data });
-    state.showSuccess = true;
+    //state.showSuccess = true;
 
+    const token = localStorage.getItem('token'); // Save the token
+    const user = localStorage.getItem('user');
+    localStorage.clear(); // Clear all items
+    localStorage.setItem('token', token); // Restore the token
+    localStorage.setItem('user', user); // Restore the token
 
-
-    store.commit('SET_SUCCESS', true);
+    //store.commit('SET_SUCCESS', true);
     
 
   } catch (error) {
@@ -250,6 +254,12 @@ export const fetchTask = async (id) => {
 export const updateTask = async (taskId, taskData) => {
   try {
     const response = await axios.put(`http://localhost:8000/api/tasks/${taskId}`, taskData);
+    
+    const token = localStorage.getItem('token'); // Save the token
+    const user = localStorage.getItem('user');
+    localStorage.clear(); // Clear all items
+    localStorage.setItem('token', token); // Restore the token
+    localStorage.setItem('user', user); // Restore the token
     return response.data;
   } catch (error) {
     if (error.response) {
@@ -271,9 +281,10 @@ export const deleteTask = async (taskId) => {
   try {
     await axios.delete(`http://localhost:8000/api/tasks/${taskId}`);
     const token = localStorage.getItem('token'); // Save the token
+    const user = localStorage.getItem('user');
     localStorage.clear(); // Clear all items
     localStorage.setItem('token', token); // Restore the token
- 
+    localStorage.setItem('user', user); // Restore the token
   } catch (error) {
     throw new Error('Failed to delete task');
   }

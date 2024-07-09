@@ -21,7 +21,7 @@ class HouseholdSeeder extends Seeder
             $household = Household::create($householdData);
 
             // Assign users to the household
-            $users = User::inRandomOrder()->take(5)->pluck('id');
+            $users = User::inRandomOrder()->take(1)->pluck('id');
             $household->users()->attach($users);
         }
     }

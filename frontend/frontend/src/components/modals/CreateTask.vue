@@ -113,7 +113,7 @@
                     :value="user.id"
                     autocomplete="off"
                   />
-                  {{ user.id }}
+                 
 
                   <div class="mt-5 sm:mt-6">
                     <button type="submit" class="inline-flex w-full justify-center rounded-md border border-transparent bg-duty px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Create Task</button>
@@ -177,6 +177,7 @@ const handleCreateTask = async () => {
 
 const closeModal = () => {
   emit('update:open', false);
+   store.commit('SET_SUCCESS', false);
 };
 
 onMounted(() => {
