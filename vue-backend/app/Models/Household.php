@@ -12,13 +12,13 @@ class Household extends Model
 
     protected $fillable = ['name'];
 
-    public function users()
-    {
-        return $this->hasMany(User::class);
-    }
 
     public function tasks()
     {
         return $this->hasMany(Task::class);
+    }
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
     }
 }

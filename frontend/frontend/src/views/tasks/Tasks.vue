@@ -4,7 +4,7 @@
       <MainH1 class="m-auto text-center mb-6 text-red-500"> 
         Today's Schedule
       </MainH1>
-      <Success v-if="state.showSuccess" @close="showSuccess = false" />
+      <!--<Success v-if="state.showSuccess" @close="showSuccess = false" />-->
       <Tabs/>
   
     </div>

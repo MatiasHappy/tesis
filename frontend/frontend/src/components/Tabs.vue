@@ -26,7 +26,7 @@
         </Tab>
       </TabList>
 
-      <TabPanels class=" h-full overflow-y-auto" style=" max-height:57vh">
+      <TabPanels class=" h-full overflow-y-auto" style=" max-height:65vh">
         <TabPanel
           v-for="(day, idx) in orderedDays"
           :key="idx"

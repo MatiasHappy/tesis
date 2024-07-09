@@ -1,10 +1,96 @@
 <template>
   <div class="container px-3">
     <!-- Conditional Rendering: If task is loaded, show the task details; otherwise, show loading message -->
+
+   
     <div v-if="task">
-      <MainH1 class="m-auto uppercase mt-4 text-3xl text-center mb-6 text-duty"> 
-        {{ task.name }}
-      </MainH1>
+   
+      <ul>
+        <li
+          :class="[
+            'relative p-3 py-4 my-3',
+            {
+              'bg-duty': task.category_name === 'Duty',
+              'bg-habit': task.category_name === 'Habit',
+              'bg-fun': task.category_name === 'Fun',
+            },
+          ]"
+        >
+          <ul class="mb-2 flex space-x-1 text-md font-normal leading-4 text-black">
+            <li
+              v-if="task.task_times && task.task_times[0]"
+              class="relative rounded-md px-3 py-0 tracking-wide text-lg font-NovecentoCondBold flex justify-center items-center"
+              :class="[
+                {
+                  'bg-morning': task.task_times[0]?.time === 'morning',
+                  'bg-afternoon': task.task_times[0]?.time === 'afternoon',
+                  'bg-evening text-white': task.task_times[0]?.time === 'evening',
+                  'bg-night text-white': task.task_times[0]?.time === 'night',
+                },
+                {
+                  'text-black': ['Duty', 'Habit', 'Fun'].includes(task.task_category_id),
+                },
+              ]"
+            >
+              {{ task.task_times[0]?.time }}
+            </li>
+            <li v-if="task.category_name">&middot;</li>
+            <li
+              v-if="task.category_name"
+              :class="[
+                'relative rounded-md px-3 py-0 tracking-widest bg-black text-lg font-NovecentoCondBold',
+                {
+                  'text-duty': task.category_name === 'Duty',
+                  'text-habit': task.category_name === 'Habit',
+                  'text-fun': task.category_name === 'Fun',
+                },
+              ]"
+            >
+              {{ task.category_name }}
+            </li>
+            <li v-if="task.duration != null">&middot;</li>
+            <li
+              v-if="task.duration != null"
+              class="rounded-full bg-white px-3 py-1 flex items-center justify-center"
+            >
+              {{ task.duration }}
+            </li>
+          </ul>
+          <h3
+            class="text-2xl mt-4 text-white tracking-wide leading-5 font-NovecentoCondBold"
+            :class="[
+              'relative rounded-md uppercase font-bold text-3xl font-SourceSans',
+              {
+                '': task.task_category_id === 'Duty',
+                '': task.task_category_id === 'Habit',
+                '': task.task_category_id === 'Fun',
+              },
+            ]"
+          >
+          <MainH1 class=" uppercase text-2xl   text-white"> 
+            {{ task.name }}
+          </MainH1>
+          </h3>
+          <router-link
+            :to="`/task/${task.id}`"
+            class="absolute top-2 right-12 text-white rounded-full px-2 py-1 text-xs"
+          >
+            <PencilSquareIcon class="h-8 w-8 text-white" />
+          </router-link>
+          <button
+            v-if="idx == 0"
+            @click="completeTask(day, task.id, task.task_times[0]?.time)"
+            class="absolute top-2 right-2 text-white rounded-full px-2 py-1 text-xs"
+          >
+            <CheckCircleIcon class="h-8 w-8 text-white" />
+          </button>
+        </li>
+      </ul>
+    </div>
+    
+
+    <div v-if="task">
+     
       
       <div class="">
 
@@ -14,7 +100,7 @@
           <div
             v-for="attempt in task.task_attempts"
             :key="attempt.id"
-            :class="['progress-segment', { 'bg-duty': attempt.status === 'completed', 'failed': attempt.status === 'failed' }]"
+            :class="['progress-segment', { ' failed bg-red-500': attempt.status === 'failed', 'bg-duty': attempt.status === 'completed' }]"
           ></div>
         </div>
 
