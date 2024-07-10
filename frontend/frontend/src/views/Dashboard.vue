@@ -1,7 +1,10 @@
 <template>
-  <MainH1 class="hidden m-auto text-center mt-4 mb-2 text-5xl text-duty"> 
+  <MainH1 class="sr-only m-auto text-center mt-4 mb-2 text-5xl text-duty"> 
     Weekly <span class="font-NovecentoRegular text-5xl text-fun">FLOW</span>
   </MainH1>
+  <h2 class="sr-only m-auto text-center mt-4 mb-2 text-5xl text-duty"> 
+  Current Tasks status
+  </h2>
   <Logo3 class="w-10/12 m-auto mb-4 mt-8" />
     <div class="h-full ">
     

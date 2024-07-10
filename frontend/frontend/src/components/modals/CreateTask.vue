@@ -28,9 +28,23 @@
                     </div>
                     
                     <RadioGroup v-model="task.task_category_id" class="mt-2 grid grid-cols-3 gap-3 sm:grid-cols-6">
-                      <RadioGroupOption as="template" v-for="category in categories" :key="category.id" :value="category.id" v-slot="{ active, checked }">
-                        <div class="bg-duty text-white font-SourceSans" :class="[ active ? 'ring-2 ring-black ring-duty bg-fun ' : '', checked ? 'text-white  bg-dutyLight ' : ' ring-1 ring-inset ring-duty hover:bg-gray-50', 'flex items-center justify-center rounded-md px-3 py-3 text-sm font-semibold uppercase sm:flex-1']">{{ category.name }}</div>
-                      </RadioGroupOption>
+                      <RadioGroupOption
+                      as="template"
+                      v-for="category in categories"
+                      :key="category.id"
+                      :value="category.id"
+                      v-slot="{ active, checked }"
+                    >
+                      <div
+                        class=" text-duty font-SourceSans flex items-center justify-center rounded-md px-3 py-3 text-sm font-semibold uppercase sm:flex-1"
+                        :class="[
+                          active ? 'ring-2 ring-black bg-duty text-white' : '',
+                          checked ? 'bg-duty text-white' : 'ring-1 ring-inset ring-duty hover:bg-duty hover:text-white'
+                        ]"
+                      >
+                        {{ category.name }}
+                      </div>
+                    </RadioGroupOption>
                     </RadioGroup>
                   </fieldset>
 
@@ -105,6 +119,7 @@
                     <span v-if="errors.repeat_interval" class="text-red-500 text-sm">{{ errors.repeat_interval[0] }}</span>
                   </div>
 
+
                   <MainInput
                     v-model="task.created_by"
                     id="user_id"
@@ -113,7 +128,14 @@
                     :value="user.id"
                     autocomplete="off"
                   />
-                 
+                  <MainInput
+                    v-model="task.household_id"
+                    id="household_id"
+                    name="household_id"
+                    type="hidden"
+                    :value="user.household_id"
+                    autocomplete="off"
+                  />
 
                   <div class="mt-5 sm:mt-6">
                     <button type="submit" class="inline-flex w-full justify-center rounded-md border border-transparent bg-duty px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Create Task</button>
@@ -163,6 +185,7 @@ const task = reactive({
   task_category_id: null,
   time_of_day: [],
   created_by: '',
+  household_id: null,
 });
 const categories = ref([]);
 const errors = reactive({});
@@ -184,6 +207,7 @@ onMounted(() => {
   fetchCategories(categories);
   if (isAuthenticated.value && user.value) {
     task.created_by = user.value.id;
+    task.household_id = user.value.household_id;
   }
 });
 
@@ -197,12 +221,14 @@ watch(() => props.open, (newValue) => {
     task.task_category_id = null;
     task.time_of_day = [];
     task.created_by = '';
+    task.household_id = null;
     Object.keys(errors).forEach(key => {
       delete errors[key];
     });
   } else {
     if (isAuthenticated.value && user.value) {
       task.created_by = user.value.id;
+      task.household_id = user.value.household_id;
     }
   }
 });

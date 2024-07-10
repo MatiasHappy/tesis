@@ -76,7 +76,7 @@
                 :class="[
                 'relative rounded-md px-3 py-0 tracking-widest text-lg font-NovecentoCondBold',
                 {
-                  'text-duty': item.category_name === 'Duty',
+                  'text-white': item.category_name === 'Duty',
                   'text-habit': item.category_name === 'Habit',
                   'text-fun': item.category_name === 'Fun',
                 },

@@ -116,6 +116,7 @@ class TaskController extends Controller
                 'time_of_day.*' => 'in:morning,afternoon,evening,night',
                 'task_category_id' => 'nullable|exists:task_categories,id',
                 'created_by' => 'required|integer',
+                'household_id' => 'required|integer',
             ]);
     
             // Extract time_of_day from validated data

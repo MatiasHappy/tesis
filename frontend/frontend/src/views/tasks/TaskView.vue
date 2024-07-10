@@ -56,7 +56,7 @@
               {{ task.duration }}
             </li>
           </ul>
-          <h3
+          <MainH1
             class="text-2xl mt-4 text-white tracking-wide leading-5 font-NovecentoCondBold"
             :class="[
               'relative rounded-md uppercase font-bold text-3xl font-SourceSans',
@@ -67,10 +67,8 @@
               },
             ]"
           >
-          <MainH1 class=" uppercase text-2xl   text-white"> 
-            {{ task.name }}
+         {{task.name}}
           </MainH1>
-          </h3>
           <router-link
             :to="`/task/${task.id}`"
             class="absolute top-2 right-12 text-white rounded-full px-2 py-1 text-xs"

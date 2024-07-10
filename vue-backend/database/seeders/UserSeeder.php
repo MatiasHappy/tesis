@@ -28,6 +28,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
             'date_of_birth' => Carbon::parse('1999-05-02'),
             'gender' => 'male',
+            'household_id' => 1,
         ]);
 
         $user = User::create([
@@ -38,6 +39,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
             'date_of_birth' => Carbon::parse('1990-02-05'),
             'gender' => 'male',
+            'household_id' => 1,
         ]);
 
         $user = User::create([
@@ -48,6 +50,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
             'date_of_birth' => Carbon::parse('1990-01-01'),
             'gender' => 'male',
+            'household_id' => 1,
         ]);
 
         $user = User::create([
@@ -58,6 +61,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
             'date_of_birth' => Carbon::parse('1990-01-01'),
             'gender' => 'male',
+            'household_id' => 1,
         ]);
         // Create additional fake users
     

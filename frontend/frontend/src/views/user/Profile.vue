@@ -1,6 +1,7 @@
 <template>
     <div>
       <h1>User Profile</h1>
+      
       <ul v-if="user">
         <li><strong>Name:</strong> {{ user.name }}</li>
         <li><strong>Email:</strong> {{ user.household }}</li>
